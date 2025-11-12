@@ -18,7 +18,8 @@
 
     <div class="container">
         <p>Apply page — fill up the form and send your request</p>
-        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+        <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post"
+        onsubmit="return confirmAction('submit_application')">
             <input type="text" name="fullname" placeholder="Full Name" required>
             <input type="email" name="email" placeholder="Email Address" required>
             <input type="submit" name="submit_application" value="Submit Application">
@@ -54,3 +55,5 @@
 
 
 ?>
+
+<script src="../admin/confirmation.js"></script>
