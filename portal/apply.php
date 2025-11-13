@@ -13,6 +13,7 @@
 
     <!-- link the external CSS -->
     <link rel="stylesheet" href="apply.css">
+    <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
 
@@ -22,7 +23,7 @@
         onsubmit="return confirmAction('submit_application')">
             <input type="text" name="fullname" placeholder="Full Name" required>
             <input type="email" name="email" placeholder="Email Address" required>
-            <input type="submit" name="submit_application" value="Submit Application">
+            <input class="btn" type="submit" name="submit_application" value="Submit Application">
         </form>
 
         <?php

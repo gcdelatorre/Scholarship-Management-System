@@ -6,9 +6,33 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST["submit_renewal"])) {
 
         $message = mysqli_real_escape_string($conn, $_POST['message']);
-        $account_id = $_SESSION['account_id']; // assume logged-in user
-        $scholar_id = $_SESSION['scholar_id'];
-        $name = $_SESSION['name'];
+        $scholar_id = $_SESSION['scholar_id'] ?? 0;
+
+            // Make sure user is logged in
+        $account_id = $_SESSION['account_id'] ?? 0;
+        if ($account_id == 0) {
+            die("You must be logged in.");
+        }
+
+        // Fetch the name from scholars table
+        // Use a proper prepared statement with a placeholder
+        $sql_name = "SELECT name FROM scholars WHERE scholar_id = ?";
+        $stmt_name = $conn->prepare($sql_name);
+        if (!$stmt_name) {
+            die("Prepare failed: " . htmlspecialchars(mysqli_error($conn)));
+        }
+        $stmt_name->bind_param("i", $scholar_id);
+        $stmt_name->execute();
+        $result_name = $stmt_name->get_result();
+
+        if ($result_name && $result_name->num_rows > 0) {
+            $row = $result_name->fetch_assoc();
+            $name = $row['name'];
+        } else {
+            $stmt_name->close();
+            die("No scholar found for this account.");
+        }
+        $stmt_name->close();
 
         // File upload
         $upload_dir = "../uploads/renewals/";
@@ -20,17 +44,40 @@ if($_SERVER["REQUEST_METHOD"] == "POST") {
         $birth_path = $upload_dir . basename($birth_file);
         $indigency_path = $upload_dir . basename($indigency_file);
 
-        move_uploaded_file($_FILES['certificate_of_birth']['tmp_name'], $birth_path);
-        move_uploaded_file($_FILES['certificate_of_indigency']['tmp_name'], $indigency_path);
+        // Save uploads with a unique prefix to avoid collisions and check success
+        $birth_tmp = $_FILES['certificate_of_birth']['tmp_name'] ?? '';
+        $indigency_tmp = $_FILES['certificate_of_indigency']['tmp_name'] ?? '';
 
+        $birth_saved = false;
+        $indigency_saved = false;
+
+        if ($birth_tmp && is_uploaded_file($birth_tmp)) {
+            $birth_path = $upload_dir . time() . '_birth_' . basename($birth_file);
+            $birth_saved = move_uploaded_file($birth_tmp, $birth_path);
+        }
+
+        if ($indigency_tmp && is_uploaded_file($indigency_tmp)) {
+            $indigency_path = $upload_dir . time() . '_indigency_' . basename($indigency_file);
+            $indigency_saved = move_uploaded_file($indigency_tmp, $indigency_path);
+        }
+
+        // Prepare insert using placeholders to avoid quoting issues
         $sql = "INSERT INTO renewals (account_id, scholar_id, name, certificate_of_birth, certificate_of_indigency, message) 
-                VALUES ('$account_id', '$scholar_id', '$name', '$birth_path', '$indigency_path', '$message')";
+                VALUES (?, ?, ?, ?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        if (!$stmt) {
+            die("Prepare failed: " . htmlspecialchars(mysqli_error($conn)));
+        }
 
-        if(mysqli_query($conn, $sql)){
+        // Bind parameters: account_id (i), scholar_id (i), name (s), birth path (s), indigency path (s), message (s)
+        $stmt->bind_param('iissss', $account_id, $scholar_id, $name, $birth_path, $indigency_path, $message);
+        $ok = $stmt->execute();
+        if ($ok) {
             echo "Renewal submitted successfully!";
         } else {
-            echo "Error: " . mysqli_error($conn);
+            echo "Error: " . htmlspecialchars($stmt->error);
         }
+        $stmt->close();
     }
 }
 ?>

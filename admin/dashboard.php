@@ -8,15 +8,14 @@ session_start(); // MUST be first
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-
 </head>
 <body>
     
     <?php include 'header.php'; ?>
 
-    <!-- PAGE CONTENT -->
-    <div class="content">
-        <h2>admin page</h2>
+    <div class="container">
+        <h2>Admin Dashboard</h2>
+        <p>Overview and quick links.</p>
     </div>
 
 </body>

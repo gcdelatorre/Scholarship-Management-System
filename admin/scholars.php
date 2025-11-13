@@ -10,13 +10,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Scholars Page</title>
+    <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
     
     <?php include 'header.php'; ?>
-    
-    <h2>Scholars Page</h2>
-    <p>Manage scholar records here.</p>
+    <div class="container">
+        <h2>Scholars</h2>
+        <p>Manage scholar records here.</p>
 
     <?php
 
@@ -27,7 +28,7 @@
             die("Query failed: " . mysqli_error($conn));
         }
 
-        echo "<table border='1'>
+        echo "<table>
         <tr>
             <th>Scholar ID</th>
             <th>Name</th>
@@ -50,7 +51,8 @@
         }
         echo "</table>";
     ?>
-    
+    </div>
+
 </body>
 </html>
 

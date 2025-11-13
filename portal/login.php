@@ -9,15 +9,18 @@ include("../database.php");
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
+    <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
 
-<h2>Login</h2>
-<form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
-    <input type="text" name="username" placeholder="Username" required><br><br>
-    <input type="password" name="password" placeholder="Password" required><br><br>
-    <input type="submit" name="login_submit" value="Log In">
-</form>
+<div class="container">
+    <h2>Login</h2>
+    <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
+        <input type="text" name="username" placeholder="Username" required>
+        <input type="password" name="password" placeholder="Password" required>
+        <input class="btn" type="submit" name="login_submit" value="Log In">
+    </form>
+</div>
 
 <?php
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login_submit'])) {
@@ -40,6 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login_submit'])) {
             // Password is correct, start a session
             $_SESSION['account_id'] = $row['account_id'];
             $_SESSION['username'] = $row['username'];
+            $_SESSION['scholar_id'] = $row['scholar_id'];
 
             // Redirect based on role
             if ($row['role'] == 'admin') {

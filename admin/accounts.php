@@ -10,16 +10,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>accounts page</title>
+    <link rel="stylesheet" href="../styles.css">
 </head>
 <body>
 
     <?php include 'header.php'; ?>  
-    
-    <h2>accounts page</h2>
-    <p>Manage user accounts here (admin/scholars).</p>
-
-    print or fetch the list of accounts from the database and print here
-    admin can active or activate account here
+    <div class="container">
+        <h2>Accounts</h2>
+        <p>Manage user accounts here (admin / scholars).</p>
 
     <?php
 
@@ -30,15 +28,13 @@
             die("Query failed: " . mysqli_error($conn));
         }
 
-        echo "<table border='1'>
+        echo "<table>
         <tr>
-            <th>account ID</th>
+            <th>Account ID</th>
             <th>Scholar ID</th>
-            <th>username</th>
-            <th>password</th>
-            <th>role</th>
-            <th>unhashedPassword</th>
-            <th>actions</th>
+            <th>Username</th>
+            <th>Role</th>
+            <th>Actions</th>
         </tr>";
         
         if (mysqli_num_rows($result) > 0) {
@@ -47,21 +43,15 @@
                 echo "<td>" . htmlspecialchars($row['account_id']) . "</td>";
                 echo "<td>" . htmlspecialchars($row['scholar_id']) . "</td>";
                 echo "<td>" . htmlspecialchars($row['username']) . "</td>";
-                echo "<td>" . htmlspecialchars($row['password']) . "</td>";
                 echo "<td>" . htmlspecialchars($row['role']) . "</td>";
-                echo "<td>" . htmlspecialchars($row['unhashedPassword']) . "</td>";
                 echo "<td>
                         <form method='POST'>
                         <input type='hidden' name='account_id' value='" . htmlspecialchars($row['account_id']) . "'>
-                        <input type='hidden' name='applicant_id' value='" . htmlspecialchars($row['scholar_id']) . "'>
-                        <input type='hidden' name='name' value='" . htmlspecialchars($row['username']) . "'>
-                        <input type='hidden' name='email' value='" . htmlspecialchars($row['password']) . "'>
-                        <input type='hidden' name='name' value='" . htmlspecialchars($row['role']) . "'>
-                        <input type='hidden' name='unhashedPassword' value='" . htmlspecialchars($row['unhashedPassword']) . "'>
-                        <button type='submit' name='deactivate'>deactivate</button>
-                        <button type='submit' name='idk'>idk</button>
+                        <button class=\"btn\" type='submit' name='deactivate'>Deactivate</button>
+                        <button class=\"btn secondary\" type='submit' name='idk'>Other</button>
                         </form>
                     </td>";
+                // single actions column already rendered above; no duplicate block
                 echo "</tr>";
             }
         } else {    
@@ -69,9 +59,7 @@
         }
         echo "</table>";
     ?>
+        </div>
 
-    
-    
-
-</body>
-</html>
+    </body>
+    </html>

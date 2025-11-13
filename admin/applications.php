@@ -36,8 +36,9 @@
     
     <?php include 'header.php'; ?>
     
-    <h2>Applications Page</h2>
-    <p>Manage scholarship applications here.</p>
+    <div class="container">
+        <h2>Applications</h2>
+        <p>Manage scholarship applications here.</p>
 
     <?php
         // Display status message from the session and then clear it
@@ -55,7 +56,7 @@
             die("Query failed: " . mysqli_error($conn));
         }
 
-        echo "<table border='1'>
+        echo "<table>
         <tr>
             <th>Applicant ID</th>
             <th>Name</th>
@@ -71,16 +72,16 @@
                 echo "<td>" . htmlspecialchars($row['name']) . "</td>";
                 echo "<td>" . htmlspecialchars($row['email']) . "</td>";
                 echo "<td>" . htmlspecialchars($row['date']) . "</td>";
-                echo "<td>
-                        <form method='POST'>
-                        <input type='hidden' name='applicant_id' value='" . htmlspecialchars($row['applicant_id']) . "'>
-                        <input type='hidden' name='name' value='" . htmlspecialchars($row['name']) . "'>
-                        <input type='hidden' name='email' value='" . htmlspecialchars($row['email']) . "'>
-                        <input type='hidden' name='date' value='" . htmlspecialchars($row['date']) . "'>
-                        <button type='submit' name='approve' onClick=\"return confirmAction('approve_application')\">Approve</button>
-                        <button type='submit' name='reject' onClick=\"return confirmAction('reject_application')\">Reject</button>
+                echo '<td>
+                        <form method="POST">
+                        <input type="hidden" name="applicant_id" value="' . htmlspecialchars($row['applicant_id']) . '">
+                        <input type="hidden" name="name" value="' . htmlspecialchars($row['name']) . '">
+                        <input type="hidden" name="email" value="' . htmlspecialchars($row['email']) . '">
+                        <input type="hidden" name="date" value="' . htmlspecialchars($row['date']) . '">
+                        <button class="btn" type="submit" name="approve" onClick="return confirmAction(\'approve_application\')">Approve</button>
+                        <button class="btn secondary" type="submit" name="reject" onClick="return confirmAction(\'reject_application\')">Reject</button>
                         </form>
-                    </td>";
+                    </td>';
                 echo "</tr>";
             }
         } else {    
