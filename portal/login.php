@@ -46,6 +46,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['login_submit'])) {
             $_SESSION['scholar_id'] = $row['scholar_id'];
 
             // Redirect based on role
+            $_SESSION['role'] = $row['role']; // Store role in session
             if ($row['role'] == 'admin') {
                 header("Location: ../admin/dashboard.php");
             } elseif ($row['role'] == 'scholar') {
